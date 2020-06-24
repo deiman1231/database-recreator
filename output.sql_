@@ -1,0 +1,119 @@
+CREATE TABLE albums(
+	AlbumId INTEGER primary key not null,
+	Title NVARCHAR(160) not null,
+	ArtistId INTEGER not null,
+	foreign key(ArtistId) references artists(ArtistId)
+);
+
+CREATE TABLE sqlite_sequence(
+	name ,
+	seq 
+);
+
+CREATE TABLE artists(
+	ArtistId INTEGER primary key not null,
+	Name NVARCHAR(120)
+);
+
+CREATE TABLE customers(
+	CustomerId INTEGER primary key not null,
+	FirstName NVARCHAR(40) not null,
+	LastName NVARCHAR(20) not null,
+	Company NVARCHAR(80),
+	Address NVARCHAR(70),
+	City NVARCHAR(40),
+	State NVARCHAR(40),
+	Country NVARCHAR(40),
+	PostalCode NVARCHAR(10),
+	Phone NVARCHAR(24),
+	Fax NVARCHAR(24),
+	Email NVARCHAR(60) not null,
+	SupportRepId INTEGER,
+	foreign key(SupportRepId) references employees(EmployeeId)
+);
+
+CREATE TABLE employees(
+	EmployeeId INTEGER primary key not null,
+	LastName NVARCHAR(20) not null,
+	FirstName NVARCHAR(20) not null,
+	Title NVARCHAR(30),
+	ReportsTo INTEGER,
+	BirthDate DATETIME,
+	HireDate DATETIME,
+	Address NVARCHAR(70),
+	City NVARCHAR(40),
+	State NVARCHAR(40),
+	Country NVARCHAR(40),
+	PostalCode NVARCHAR(10),
+	Phone NVARCHAR(24),
+	Fax NVARCHAR(24),
+	Email NVARCHAR(60),
+	foreign key(ReportsTo) references employees(EmployeeId)
+);
+
+CREATE TABLE genres(
+	GenreId INTEGER primary key not null,
+	Name NVARCHAR(120)
+);
+
+CREATE TABLE invoices(
+	InvoiceId INTEGER primary key not null,
+	CustomerId INTEGER not null,
+	InvoiceDate DATETIME not null,
+	BillingAddress NVARCHAR(70),
+	BillingCity NVARCHAR(40),
+	BillingState NVARCHAR(40),
+	BillingCountry NVARCHAR(40),
+	BillingPostalCode NVARCHAR(10),
+	Total NUMERIC(10,2) not null,
+	foreign key(CustomerId) references customers(CustomerId)
+);
+
+CREATE TABLE invoice_items(
+	InvoiceLineId INTEGER primary key not null,
+	InvoiceId INTEGER not null,
+	TrackId INTEGER not null,
+	UnitPrice NUMERIC(10,2) not null,
+	Quantity INTEGER not null,
+	foreign key(TrackId) references tracks(TrackId),
+	foreign key(InvoiceId) references invoices(InvoiceId)
+);
+
+CREATE TABLE media_types(
+	MediaTypeId INTEGER primary key not null,
+	Name NVARCHAR(120)
+);
+
+CREATE TABLE playlists(
+	PlaylistId INTEGER primary key not null,
+	Name NVARCHAR(120)
+);
+
+CREATE TABLE playlist_track(
+	PlaylistId INTEGER not null,
+	TrackId INTEGER not null,
+	primary key(PlaylistId, TrackId),
+	foreign key(TrackId) references tracks(TrackId),
+	foreign key(PlaylistId) references playlists(PlaylistId)
+);
+
+CREATE TABLE tracks(
+	TrackId INTEGER primary key not null,
+	Name NVARCHAR(200) not null,
+	AlbumId INTEGER,
+	MediaTypeId INTEGER not null,
+	GenreId INTEGER,
+	Composer NVARCHAR(220),
+	Milliseconds INTEGER not null,
+	Bytes INTEGER,
+	UnitPrice NUMERIC(10,2) not null,
+	foreign key(MediaTypeId) references media_types(MediaTypeId),
+	foreign key(GenreId) references genres(GenreId),
+	foreign key(AlbumId) references albums(AlbumId)
+);
+
+CREATE TABLE sqlite_stat1(
+	tbl ,
+	idx ,
+	stat 
+);
